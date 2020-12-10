@@ -1,0 +1,168 @@
+/* Variables */
+:root{
+  --primary-gradient: linear-gradient(to right, #554d72, #2b5876);
+  --mango-gradient : linear-gradient(to right, #ffa751, #ffe259);
+  --text-color: #e5eeee;
+  --Montserrat: "Montserrat", cursive;
+  --Lobster: "Lobster", cursive;
+  --primary-shadow: 3px 4px 7px rgba(32, 28, 28, 0.534);
+  --border-color: rgba(29, 28, 28, 0.329);
+}
+#userName {
+    font-size: 1.9rem;
+}
+#container { position: relative; }
+#container{
+  width: 1280;
+  height: 515px;
+  background-color: rgb(245, 240, 240);
+  border-radius: 4px;
+  background-repeat: repeat;
+}
+body{
+  background: rgb(250, 253, 250) !important;
+}
+
+#canvasTemp { position: absolute; top: 1px; left: 1px; }
+canvas {
+  border-radius: 5px;
+  cursor: url(../assets/pencil.png), crosshair;
+}
+#userLists {
+  border-radius: 0.5rem;
+  overflow-y: scroll;
+  line-height:1;
+  text-align: center;
+  height: 220px;
+ 
+  }
+#Tools{
+    margin-top: 5px !important;
+}
+.container-fluid .btn.btn-sm{
+background:transparent;
+color: black;
+outline: none;
+cursor: pointer;
+text-shadow: 0 0.8px rgb(16, 27, 44);
+display: inline-block;
+font-size: 15px;
+border: none;
+border-radius: 4.5px;
+padding: 2.1px 15.8px;
+margin-right: 0px;
+}
+.snackbar {
+  position: relative;
+  bottom:95%;
+  left: 85%;
+  height: 25px;
+}
+#snackbar {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 85%;
+  top: 30px;
+  font-size: 17px;
+}
+
+#snackbar.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+  from {top: 0; opacity: 0;} 
+  to {top: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {top: 0; opacity: 0;}
+  to {top: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {top: 30px; opacity: 1;} 
+  to {top: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {top: 30px; opacity: 1;}
+  to {top: 0; opacity: 0;}
+}
+button {
+font-size: 2.1em; 
+padding: 1.1px;
+text-align: center;
+}
+.reciever {
+  background-color: rgb(36, 61, 116)!important;
+  left: 1px;
+  border-radius: 2px;
+  font-size:0.8rem;
+  float: left;
+  margin: 1% !important;
+}
+.sender {
+  background-color: rgb(36, 61, 116)!important;
+  right: 10px;
+  border-radius: 3px;
+  font-size:0.8rem;
+  float: right;
+  margin: 1% !important;
+}
+.recievermsg {
+  left: 1px;
+  margin: 1% !important;
+  background-color: rgb(40, 112, 64) ;
+  font-size: 1.5rem;
+  border-radius: 3px;
+  text-align: left;
+  margin-right: 40px !important;
+}
+.sendermsg {
+  left: 51px;
+  background-color: rgb(20, 49, 180);
+  border-radius: 3px;
+  font-size: 1.5rem;
+  margin: 1% !important;
+  margin-left: 40px !important;
+}
+
+#text_tool {
+  outline: 0;
+  z-index:1000 !important;
+  white-space: nowrap;
+  position: absolute;
+  border: 1px dashed black;
+  display: none;
+  }
+#chatting {
+text-align: left;
+border-radius: 0.5rem;
+height: 220px;
+line-height:1;
+}
+#userLists > button {
+width: 100%;
+} 
+.container .btn.btn-sm:active{
+background: rgb(94, 173, 147); 
+}
+label{
+color: rgb(196, 186, 186);
+}
+.myfont {
+  font-family: var(--Lobster);
+  padding: 0;
+  margin: 0;
+}

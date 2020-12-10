@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="WhiteBoard System">
+    <meta name="author" content="">
+    <title>Whiteboard System</title>
+    <style >
+      .snackbar {
+        position: relative;
+        bottom:95%;
+        left: 85%;
+        height: 25px;
+      }
+      #snackbar {
+        visibility: hidden;
+        min-width: 250px;
+        margin-left: -125px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 2px;
+        padding: 16px;
+        position: fixed;
+        z-index: 1;
+        left: 85%;
+        top: 30px;
+        font-size: 17px;
+      }
+
+      #snackbar.show {
+        visibility: visible;
+        -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      }
+
+      @-webkit-keyframes fadein {
+        from {top: 0; opacity: 0;} 
+        to {top: 30px; opacity: 1;}
+      }
+
+      @keyframes fadein {
+        from {top: 0; opacity: 0;}
+        to {top: 30px; opacity: 1;}
+      }
+
+      @-webkit-keyframes fadeout {
+        from {top: 30px; opacity: 1;} 
+        to {top: 0; opacity: 0;}
+      }
+
+      @keyframes fadeout {
+        from {top: 30px; opacity: 1;}
+        to {top: 0; opacity: 0;}
+      }
+      button {
+      font-size: 2.2em; 
+      padding: 1.2px;
+      text-align: center;
+      }
+      .reciever {
+        background-color: rgb(36, 61, 116)!important;
+        left: 1px;
+        border-radius: 2px;
+        font-size:0.8rem;
+        float: left;
+        margin: 1% !important;
+      }
+      .sender {
+        background-color: rgb(36, 61, 116)!important;
+        right: 10px;
+        border-radius: 3px;
+        font-size:0.8rem;
+        float: right;
+        margin: 1% !important;
+      }
+      .recievermsg {
+        left: 1px;
+        margin: 1% !important;
+        background-color: rgb(40, 112, 64) ;
+        font-size: 1.5rem;
+        border-radius: 3px;
+        text-align: left;
+        margin-right: 40px !important;
+      }
+      .sendermsg {
+        left: 51px;
+        background-color: rgb(20, 49, 180);
+        border-radius: 3px;
+        font-size: 1.5rem;
+        margin: 1% !important;
+        margin-left: 40px !important;
+      }
+      .come-from-modal.left .modal-dialog,
+      .come-from-modal.right .modal-dialog {
+          position: fixed;
+          margin: auto;
+          margin-right: 5px!important;
+          width: 350px;
+          height: 100%;
+          -webkit-transform: translate3d(0%, 0, 0);
+          -ms-transform: translate3d(0%, 0, 0);
+          -o-transform: translate3d(0%, 0, 0);
+          transform: translate3d(0%, 0, 0);
+      }
+
+      .come-from-modal.left .modal-content,
+      .come-from-modal.right .modal-content {
+          height: 100%;
+          overflow-y: auto;
+          border-radius: 0px;
+      }
+
+      .come-from-modal.left .modal-body,
+      .come-from-modal.right .modal-body {
+          padding: 15px 15px 20px;
+      }
+      .come-from-modal.right.fade .modal-dialog {
+          right: -520px;
+          -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+          -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+          -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+          transition: opacity 0.3s linear, right 0.3s ease-out;
+      }
+
+      .come-from-modal.right.fade.in .modal-dialog {
+          right: 0;
+      }
+    </style>
+     
+    <link href="css/style1.css" rel="stylesheet">
+    <link href="css/head.min.css" rel="stylesheet">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script src="js/jscolor.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/main.js"></script> 
+    <script src='js/socket_client.js'></script>
+    <script src='js/jquery.min.js'></script>
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    
+  </head>
+    
+  <body >
+    <div id="content">
+      <div id="snackbar"></div>
+      <!-- Topbar -->
+    
+      <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <div  style="padding: 8px !important; margin-bottom: 5px; width:77%">
+          <strong id="description" style="display: none;"></strong>
+        </div>
+          <ul class="navbar-nav ml-auto">
+              <!-- Nav Item - User Information -->
+              <li class="nav-item dropdown no-arrow">
+                  <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <span id="userName" class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
+                      <img class="img-profile rounded-circle"
+                          src="assets/userAvatar.svg">
+                  </a>
+                  <!-- Dropdown - User Information -->
+                  <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                      aria-labelledby="userDropdown">
+                      <a class="dropdown-item" id="Logout">
+                          <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                          Logout
+                      </a>
+                  </div>
+              </li>
+
+          </ul>
+
+      </nav>
+
+
+  </div>
+	<div class="container-fluid" style="margin-right: 10px !important;">
+    
+    <div>
+      <div id="Tools" style="display: inline-block;vertical-align: top;">
+        <div>
+        <button class="btn btn-success btn-sm" value="pencildrawing" id="pencilDrawingButton"><i class="fas fa-pen-fancy" style="font-size:24px"></i></button>
+        <button  class="btn btn-success btn-sm" value="rectDrawing" id="ButtonRectDrawing"><i class="far fa-square" style="font-size:24px"></i></button>
+        <button  class="btn btn-success btn-sm" value="circleDrawing" id="ButtonCircleDrawing"><i class="far fa-circle" style="font-size:24px" style="font-size:24px"></i></button>
+        <button  class="btn btn-success btn-sm" value="ellipseDrawing" id="ButtonEllipseDrawing"><i style="width: 100%;height: 90%;font-size:24px" class="far fa-circle">eps</i></button>
+        <button  class="btn btn-success btn-sm" value="lineDrawing" id="ButtonLineDrawing"><i class="fas fa-minus" style="font-size:24px"></i></button>
+        <button  class="btn btn-success btn-sm" id="ButtoImageClear"><i class="fas fa-trash" style="font-size:24px"></i></button>
+        <button  class="btn btn-success btn-sm" value="textDrawing" id="ButtonTextDrawing"><i class="fas fa-font" style="font-size:24px"></i></button>
+       
+        
+         <label for="line-Width"><i class="fa fa-th-list"></i>: </label>
+        <span class="form-group" style="width: 58px;display: inline-block; height: 10px;">
+          
+          <select class="form-control" id="pickingLinethickness">
+            <option>4</option><option>5</option>  <option>7</option>
+            <option>9</option><option>12</option>
+            <option>14</option> <option>18</option>
+          </select>
+        </span>
+         <span class="form-group" style="width: 124px;display: inline-block;">
+          <select class="form-control" id="selectingTextFontFamily">
+            <option value="Courier New">Courier New</option><option value="serif">serif</option>
+            <option value="Arial" selected>Arial</option>
+            <option value="sans-serif">sans-serif</option> <option value="Verdana" >Verdana</option>
+         
+          </select>
+        </span>
+        <span class="form-group" style="width: 90px;display:none;">
+          <select class="form-control" id="selectingTextFontSize">
+            <option value="4">4 Px</option><option value="7">7 Px</option><option value="10">10 Px</option>
+            <option value="14" selected>12 Px</option> <option value="16">16 Px</option>
+           
+          </select>
+        </span>
+            
+        
+        <label for="colour" ><img style="width: 26px; height: 26px;" src="assets/pickcolor1.jpg">:</label>
+        <input id="changeColorToolButton"  value="#2139FF" style="width:80px;" class="jscolor {width:240, height:155, position:'right',borderColor:'#717C70', insetColor:'#717C70', backgroundColor:'#666'}">
+        <button type="button" class="btn btn-warning btn-sm" id="ButtonImageSave"><i class="far fa-save" style="font-size:26px"></i></button>
+        <button type="button" class="btn btn-warning btn-sm" id="ButtonImageCancel" style="display: none;"><i class="fa fa-times" aria-hidden="true" style="font-size:26px"></i></button>
+        </div>
+       
+        
+        <div id="container" style="display: inline-block;vertical-align: top;">
+          <canvas id="whiteboardPlatform" width="1280" height="525">
+           
+          </canvas>
+        </div>
+      </div>
+       <div style="display:inline-block;width: 5px;">
+          <button type="button" style="display: inline-block;" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+               user
+        </button>
+      </div>
+    </div>
+    <div class="modal fade  come-from-modal right" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-body">
+                <div style="display: inline-block; width: 292px;vertical-align: middle;">
+                  <span class="myfont" style="width: 280px; text-align: center; display: inline-block; font-size: 3em; color: rgb(21, 21, 22); ">Users List</span>
+                  <div id='userLists' className = "list-group" style="border:1px solid rgb(19, 19, 22); margin-right: 1px;">
+                  
+                </div>
+                <span class="myfont" style="width: 280px; text-align: center; display: inline-block; font-size: 2.8em; color: rgb(29, 29, 32); ">Chatting Box</span>
+                  <div id='chatting' className = "list-group" style="border:1px solid rgb(17, 17, 17); vertical-align: bottom;">
+                    <div id="msg_content" style="height: 165px; overflow-y: scroll;">
+                        
+                    </div>
+                    <input id="receiver_msg" type="text" placeholder="Reciever name" value="" style="width: 290px;height: 25px; ">
+                    <input id="msg" type="text" placeholder="Messages" value="" style="width: 249px;height: 25px; "><button id="msg_send" style="height: 25px; width: 40px;">Send</button>
+                </div>
+                  
+              </div>
+              </div>
+             
+          </div>
+      </div>
+  </div>
+    <script type="text/javascript" >
+          document.getElementById('ButtoImageClear').disabled=true;
+          document.getElementById('ButtonImageSave').style.display="none";
+          var socket = io();
+            function voteStart(votingUserName){
+              var votingUserNamename= votingUserName.getAttribute("id");
+              //////////
+              var connectedUserName = localStorage.getItem("connectedUserName");
+              //vote to elect a leaderName in this whiteboard
+               if(localStorage.getItem('voted')==undefined && localStorage.getItem('leaderName')==undefined){
+                var votingUserNamename= votingUserName.getAttribute("id");
+               // localStorage.setItem('voted',voted)
+                var btn__User = document.getElementsByClassName("btn_user");
+                for(var i = 0; i < btn__User.length; i++) {
+                  btn__User[i].disabled = true;
+                }
+               $("#snackbar").text(`You voted ${votingUserNamename} as  leader`);
+               $("#snackbar").addClass("show");      
+               setTimeout(function(){ $("#snackbar").removeClass("show")}, 3000);
+               $("description").text("Voted")
+                var data = {connectedUserName,votingUserNamename};
+               socket.emit("systemLeaderVote", data);
+              } else  {
+                ///////////////
+                  workingUser=votingUserNamename;
+                  socket.emit("userAllowed", workingUser);
+                  $("#snackbar").text(`${workingUser} can work on this whiteboard!`);
+                  $("#snackbar").addClass("show");      
+                  setTimeout(function(){ $("#snackbar").removeClass("show")}, 3000)
+                 
+              } 
+             
+            }
+    </script>        
+     <script type="text/javascript">
+      $(document).ready(function(){
+        var socket = io();
+          $("#msg_send" ).click(function() {
+            var reciever = $("#receiver_msg").val();
+            var msg = $("#msg").val();
+            if (msg){ var user =  $("#userName").text();
+            var data = {user:user,reciever:reciever,msg:msg};
+            socket.emit("chattingbox", data);
+            var msg = $("#msg").val("");  $("#receiver_msg").val("");}
+          });
+          $("#userName").text(localStorage.getItem("connectedUserName"));
+          var canvasBoardurl = window.location.href;
+          $('.linkToBoard').attr("href",canvasBoardurl);
+          console.log(localStorage.getItem('connectedUserName'));
+          $("#logout").click(function(){
+            window.location.href = "index.html";
+          })
+      });
+    </script>
+   
+
+	</body>
+</html>

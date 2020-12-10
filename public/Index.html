@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Whiteboard System Login</title>
+
+
+    <!-- Owl-Carousel -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+        integrity="sha256-UhQQ4fxEeABh4JrcmAJ1+16id/1dnlOEVCFOxDef9Lw=" crossorigin="anonymous" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css"
+        integrity="sha256-kksNxjDRxd/5+jGurZUJd1sdR2v+ClrCl3svESBaJqw=" crossorigin="anonymous" />
+    <link ref="stylesheet" type="text/css" href="./css/snackbar.css" />
+    <script src="js/password.js"></script>
+    <script src="https://kit.fontawesome.com/23412c6a8d.js"></script>
+    <script src="js/snackbar.js"></script>
+    <link rel="stylesheet" href="css/Style.css">
+    <style>
+                
+        .snackbar {
+            position: relative;
+            bottom:95%;
+            left: 85%;
+            height: 25px;
+        }
+        #snackbar {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 85%;
+            top: 30px;
+            font-size: 17px;
+        }
+        
+        #snackbar.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        
+        @-webkit-keyframes fadein {
+            from {top: 0; opacity: 0;} 
+            to {top: 30px; opacity: 1;}
+        }
+        
+        @keyframes fadein {
+            from {top: 0; opacity: 0;}
+            to {top: 30px; opacity: 1;}
+        }
+        
+        @-webkit-keyframes fadeout {
+            from {top: 30px; opacity: 1;} 
+            to {top: 0; opacity: 0;}
+        }
+        
+        @keyframes fadeout {
+            from {top: 30px; opacity: 1;}
+            to {top: 0; opacity: 0;}
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- <div id="snackbar">Some text some message..</div> -->
+        <div class="panel">
+            <div class="row">
+                <div class="col liquid">
+                    <h4><i class="fas fa-drafting-compass"></i> Whiteboard System.</h4>
+
+                    <!-- Carousel start -->
+
+                    <div class="owl-carousel owl-theme">
+                        <img src="./assets/images.jpg" alt="" class="login_img">
+                        <img src="./assets/images2.jpg" alt="" class="login_img">
+                      
+                        <img src="./assets/images4.jpg" alt="" class="login_img">
+                        <img src="./assets/images6.png" alt="" class="login_img">
+                        <img src="./assets/undraw_authentication_fsn5.svg" alt="" class="login_img">
+                    </div>
+
+                    <!-- Carousel end-->
+
+                </div>
+                <div class="col login">
+
+                    <div id="form">
+                        <div class="titles">
+                            <h2>Welcome!</h2>
+                        </div>
+                        <div class="form-group">
+                            <input id="connectedUserName" type="text" placeholder="User name" class="form-input">
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input id="password" type="password" placeholder="Password" class="form-input">
+                            <div class="input-icon">
+                                <i class="fas fa-user-lock"></i>
+                            </div>
+                        </div>
+
+                        <button id = "submit" class="btn btn-login">Login</button>
+                    </div>
+                    <!-- <button id = "submit"  class="btn btn-login">Login</button> -->
+                </div>
+                <div id="snackbar">Please enter the password correctly!</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
+        integrity="sha256-pTxD+DSzIwmwhOqTFN+DB+nHjO4iAsbgfyFq5K5bcE0=" crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('.owl-carousel').owlCarousel({
+                loop: true,
+                autoplay: true,
+                autoplayTimeout: 2000,
+                autoplayHoverPause: true,
+                items: 1
+            });
+            $("#submit").click(function(){
+    if (localStorage.length > 0 ) {
+            localStorage.clear();
+        } 
+  var connectedUserName = $("#connectedUserName").val();
+    if (connectedUserName == "") {
+        $("#snackbar").text("Please enter Username! ");
+        $("#snackbar").addClass("show");
+        setTimeout(function(){ $("#snackbar").removeClass("show")}, 3000);
+        return false;
+    }
+  var cur_password = $("#password").val();   
+    if(PASS==cur_password){
+        localStorage.setItem('connectedUserName',connectedUserName);
+        let data = {"user":connectedUserName};
+        $.ajax({
+            url: 'http://localhost:5400/signin',
+            data: data, type: 'POST', jsonpCallback: 'callback', 
+            success: function (data) {
+                if(data=="successful"){
+                    window.location.href = "whiteboard.html";
+                } else{
+                    $("#snackbar").text("User name already exist! ");
+                    $("#snackbar").addClass("show");
+                   
+                    setTimeout(function(){ $("#snackbar").removeClass("show")}, 3000);
+                }
+            },
+            error: function (xhr, status, error) {
+                $("#snackbar").text("Server disconnected! ");
+                    $("#snackbar").addClass("show");
+                   
+                    setTimeout(function(){ $("#snackbar").removeClass("show")}, 3000);
+            },
+        });
+    }else{
+        $("#snackbar").text("Please enter password correctly!");
+       $("#snackbar").addClass("show");
+      
+       setTimeout(function(){ $("#snackbar").removeClass("show")}, 3000);
+        //Snackbar.show({text: 'Example notification text.',width:'200px',customClass:"snackbar",showAction:false});
+    }
+});
+
+ 
+        });
+
+    </script>
+</body>
+
+</html>
